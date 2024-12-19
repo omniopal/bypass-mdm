@@ -13,15 +13,17 @@ NC='\033[0m'
 get_drive_name() {
     while true; do
         if [ -d "/Volumes/Macintosh HD" ]; then
+            echo -e "${GRN}Drive 'Macintosh HD' found successfully.${NC}"
             echo "Macintosh HD"
             return
         else
-            read -p "Please enter your drive/volume name: " drive_name
+            read -p "Default drive name 'Macintosh HD' not found. Please enter your drive name: " drive_name
             if [ -d "/Volumes/${drive_name}" ]; then
+                echo -e "${GRN}Drive '${drive_name}' found successfully.${NC}"
                 echo "$drive_name"
                 return
             else
-                echo -e "${RED}Error: The drive '${drive_name}' does not exist. Please try again.${NC}" >&2
+                echo -e "${RED}Error: The drive '${drive_name}' was not found. Please try again.${NC}" >&2
             fi
         fi
     done
