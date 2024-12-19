@@ -9,17 +9,15 @@ PUR='\033[1;35m'
 CYAN='\033[1;36m'
 NC='\033[0m'
 
-# Function to get drive name
+# Get drive name
 get_drive_name() {
     while true; do
         if [ -d "/Volumes/Macintosh HD" ]; then
-            echo -e "${GRN}Drive 'Macintosh HD' found successfully.${NC}"
             echo "Macintosh HD"
             return
         else
             read -p "Default drive name 'Macintosh HD' not found. Please enter your drive name: " drive_name
             if [ -d "/Volumes/${drive_name}" ]; then
-                echo -e "${GRN}Drive '${drive_name}' found successfully.${NC}"
                 echo "$drive_name"
                 return
             else
@@ -30,15 +28,12 @@ get_drive_name() {
 }
 
 # Display header
-echo -e "${CYAN}Bypass MDM By Assaf Dori (assafdori.com) and altered by Jacob${NC}"
+echo -e "${CYAN}Bypass MDM By Assaf Dori (assafdori.com)${NC}"
 echo ""
 
-# Get drive name at the start
+# Get drive name
 DRIVE_NAME=$(get_drive_name)
 DATA_VOLUME="${DRIVE_NAME} - Data"
-
-# Debugging - Print DRIVE_NAME
-echo "Debug: DRIVE_NAME='${DRIVE_NAME}'"
 
 # Prompt user for choice
 PS3='Please enter your choice: '
@@ -74,20 +69,18 @@ select opt in "${options[@]}"; do
             dscl -f "$dscl_path" localhost -passwd "/Local/Default/Users/$username" "$passw"
             dscl -f "$dscl_path" localhost -append "/Local/Default/Groups/admin" GroupMembership $username
 
-            HOSTS_FILE="/Volumes/${DRIVE_NAME}/etc/hosts"
-
             # Block MDM domains
-            echo "0.0.0.0 deviceenrollment.apple.com" >> "$HOSTS_FILE"
-            echo "0.0.0.0 mdmenrollment.apple.com" >> "$HOSTS_FILE"
-            echo "0.0.0.0 iprofiles.apple.com" >> "$HOSTS_FILE"
+            echo "0.0.0.0 deviceenrollment.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
+            echo "0.0.0.0 mdmenrollment.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
+            echo "0.0.0.0 iprofiles.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
             echo -e "${GRN}Successfully blocked MDM & Profile Domains"
 
             # Remove configuration profiles
             touch /Volumes/Data/private/var/db/.AppleSetupDone
-            rm -rf /Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord
-            rm -rf /Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound
-            touch /Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled
-            touch /Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound
+            rm -rf "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigHasActivationRecord"
+            rm -rf "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordFound"
+            touch "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigProfileInstalled"
+            touch "/Volumes/${DRIVE_NAME}/var/db/ConfigurationProfiles/Settings/.cloudConfigRecordNotFound"
 
             echo -e "${GRN}MDM enrollment has been bypassed!${NC}"
             echo -e "${NC}Exit terminal and reboot your Mac.${NC}"
