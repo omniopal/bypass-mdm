@@ -11,12 +11,20 @@ NC='\033[0m'
 
 # Function to get drive name
 get_drive_name() {
-    if [ -d "/Volumes/Macintosh HD" ]; then
-        echo "Macintosh HD drive was found"
-    else
-        read -p "Please enter your drive/volume name: " drive_name
-        echo "$drive_name"
-    fi
+    while true; do
+        if [ -d "/Volumes/Macintosh HD" ]; then
+            echo "Macintosh HD"
+            return
+        else
+            read -p "Please enter your drive name: " drive_name
+            if [ -d "/Volumes/${drive_name}" ]; then
+                echo "$drive_name"
+                return
+            else
+                echo -e "${RED}Error: The drive '${drive_name}' does not exist. Please try again.${NC}"
+            fi
+        fi
+    done
 }
 
 # Display header
