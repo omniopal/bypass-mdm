@@ -14,7 +14,7 @@ get_drive_name() {
     if [ -d "/Volumes/Macintosh HD" ]; then
         echo "Macintosh HD drive was found"
     else
-        read -p "Please enter your drive/volume name: " drive_name
+        read -p "Please enter your drive name: " drive_name
     fi
 }
 
@@ -25,6 +25,9 @@ echo ""
 # Get drive name at the start
 DRIVE_NAME=$(get_drive_name)
 DATA_VOLUME="${DRIVE_NAME} - Data"
+
+# Debugging - Print DRIVE_NAME
+echo "Debug: DRIVE_NAME='${DRIVE_NAME}'"
 
 # Prompt user for choice
 PS3='Please enter your choice: '
@@ -60,10 +63,12 @@ select opt in "${options[@]}"; do
             dscl -f "$dscl_path" localhost -passwd "/Local/Default/Users/$username" "$passw"
             dscl -f "$dscl_path" localhost -append "/Local/Default/Groups/admin" GroupMembership $username
 
+            HOSTS_FILE="/Volumes/${DRIVE_NAME}/etc/hosts"
+
             # Block MDM domains
-            echo "0.0.0.0 deviceenrollment.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
-            echo "0.0.0.0 mdmenrollment.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
-            echo "0.0.0.0 iprofiles.apple.com" >> "/Volumes/${DRIVE_NAME}/etc/hosts"
+            echo "0.0.0.0 deviceenrollment.apple.com" >> "$HOSTS_FILE"
+            echo "0.0.0.0 mdmenrollment.apple.com" >> "$HOSTS_FILE"
+            echo "0.0.0.0 iprofiles.apple.com" >> "$HOSTS_FILE"
             echo -e "${GRN}Successfully blocked MDM & Profile Domains"
 
             # Remove configuration profiles
