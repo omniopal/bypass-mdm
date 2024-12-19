@@ -16,12 +16,12 @@ get_drive_name() {
             echo "Macintosh HD"
             return
         else
-            read -p "Please enter your drive name: " drive_name
+            read -p "Please enter your drive/volume name: " drive_name
             if [ -d "/Volumes/${drive_name}" ]; then
                 echo "$drive_name"
                 return
             else
-                echo -e "${RED}Error: The drive '${drive_name}' does not exist. Please try again.${NC}"
+                echo -e "${RED}Error: The drive '${drive_name}' does not exist. Please try again.${NC}" >&2
             fi
         fi
     done
