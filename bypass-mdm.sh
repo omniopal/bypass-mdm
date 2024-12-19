@@ -14,7 +14,8 @@ get_drive_name() {
     if [ -d "/Volumes/Macintosh HD" ]; then
         echo "Macintosh HD drive was found"
     else
-        read -p "Please enter your drive name: " drive_name
+        read -p "Please enter your drive/volume name: " drive_name
+        echo "$drive_name"
     fi
 }
 
